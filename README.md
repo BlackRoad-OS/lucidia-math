@@ -53,6 +53,10 @@ result = transform.apply_to_manifold(data)
 primes = prime_explorer.explore_range(1, 10000)
 patterns = prime_explorer.find_patterns(primes)
 
+# Residue and density analysis
+counts = prime_explorer.residue_class_counts(mod=6, limit=5000)
+centers, empirical, predicted = prime_explorer.prime_density_profile(limit=20000, window=2000)
+
 # Quantum finance
 model = quantum_finance.QuantumPortfolio(assets)
 optimal = model.optimize()

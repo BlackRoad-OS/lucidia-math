@@ -106,3 +106,95 @@ def plot_fourier(gaps: np.ndarray, fft: np.ndarray) -> plt.Figure:
     ax[1].plot(fft)
     ax[1].set_title("FFT magnitude")
     return fig
+
+
+def residue_class_counts(
+    mod: int, limit: int, *, backend: str | None = None
+) -> np.ndarray:
+    """Count primes that land in each residue class modulo ``mod``.
+
+    Parameters
+    ----------
+    mod:
+        The modulus for the residue classes.
+    limit:
+        Upper bound (exclusive) for prime generation.
+    backend:
+        Optional array backend name. Defaults to the first available backend.
+
+    Returns
+    -------
+    np.ndarray
+        One-dimensional array with counts for each residue class ``0..mod-1``.
+    """
+
+    backend_cfg = select_backend(backend)
+    xp = backend_cfg.array_module
+    counts = xp.zeros(mod, dtype=int)
+    for prime in sp.primerange(2, limit):
+        counts[int(prime % mod)] += 1
+    return np.asarray(counts)
+
+
+def plot_residue_class_counts(counts: np.ndarray) -> plt.Figure:
+    fig, ax = plt.subplots(figsize=(6, 4))
+    classes = np.arange(len(counts))
+    ax.bar(classes, counts, color="slateblue")
+    ax.set_xlabel("Residue class")
+    ax.set_ylabel("Prime count")
+    ax.set_title("Prime residues modulo n")
+    return fig
+
+
+def prime_density_profile(
+    limit: int, window: int = 1000, *, backend: str | None = None
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Compute empirical and predicted prime densities across intervals.
+
+    The function walks the integer line in windows and reports the observed
+    density of primes along with the prime number theorem approximation
+    using the logarithmic integral :math:`Li(x)`.
+
+    Parameters
+    ----------
+    limit:
+        Upper bound (exclusive) for sampling.
+    window:
+        Width of each sampling window. The final window is clipped to ``limit``.
+    backend:
+        Optional array backend name. Defaults to the first available backend.
+
+    Returns
+    -------
+    Tuple[np.ndarray, np.ndarray, np.ndarray]
+        ``x`` sample positions, empirical densities, and predicted densities.
+    """
+
+    backend_cfg = select_backend(backend)
+    xp = backend_cfg.array_module
+    starts = xp.arange(2, limit, window)
+    empirical: list[float] = []
+    predicted: list[float] = []
+
+    for start in starts:
+        end = min(int(start + window), limit)
+        primes = list(sp.primerange(int(start), end))
+        count = len(primes)
+        empirical.append(count / (end - int(start)))
+        predicted.append(float(sp.li(end) - sp.li(int(start))) / (end - int(start)))
+
+    centers = np.asarray(starts + window / 2.0, dtype=float)
+    return np.asarray(centers), np.asarray(empirical), np.asarray(predicted)
+
+
+def plot_density_profile(
+    x: np.ndarray, empirical: np.ndarray, predicted: np.ndarray
+) -> plt.Figure:
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(x, empirical, label="empirical", marker="o", linestyle="-")
+    ax.plot(x, predicted, label="PNT estimate", linestyle="--")
+    ax.set_xlabel("Sample center")
+    ax.set_ylabel("Prime density")
+    ax.set_title("Prime density vs. logarithmic integral estimate")
+    ax.legend()
+    return fig
