@@ -1,4 +1,4 @@
-"""Amundson coherence, energy, and learning equations.
+r"""Amundson coherence, energy, and learning equations.
 
 This module encodes the first entry in the proposed Amundson
 series—*Amundson I: The Coherence Gradient Equation*—and
@@ -63,7 +63,7 @@ def decoherence_energy(
     lambda_: float,
     k_b_t: float,
 ) -> float:
-    """Compute the decoherence energy :math:`E_\phi`.
+    r"""Compute the decoherence energy :math:`E_\phi`.
 
     Parameters mirror the seed formulation: ``r_x`` and ``r_y``
     are participation amplitudes, ``lambda_`` controls coupling,
@@ -84,7 +84,7 @@ def phase_derivative(
     r_y: float,
     k_b_t: float,
 ) -> float:
-    """Evaluate the Amundson I coherence gradient equation.
+    r"""Evaluate the Amundson I coherence gradient equation.
 
     This function computes :math:`\frac{d\phi}{dt}` from the
     provided state, matching the proposed dynamic:
@@ -156,7 +156,7 @@ class AmundsonCoherenceModel:
 
 
 def amundson_energy_balance(*, energy: float, dissipation: float) -> float:
-    """Return the net resonant energy after accounting for dissipation.
+    r"""Return the net resonant energy after accounting for dissipation.
 
     The current Amundson II formulation focuses on conserving the
     available coherence energy while subtracting the irreversible loss
