@@ -5,10 +5,8 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from .prime_explorer import (
-    PrimeVisualizer, plot_fourier, plot_residue, plot_ulam,
-    fourier_prime_gaps, residue_grid, ulam_spiral,
-)
+from .prime_explorer import PrimeVisualizer, plot_fourier, plot_residue, plot_ulam,
+from .prime_explorer import fourier_prime_gaps, residue_grid, ulam_spiral
 from .quantum_finance import QuantumFinanceSimulator
 from .sine_wave_codex import plot_waves
 from .trinary_logic import TrinaryLogicEngine

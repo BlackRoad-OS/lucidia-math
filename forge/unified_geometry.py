@@ -40,7 +40,7 @@ class RecurrenceOperator:
         return self.phi * r_n - self.psi * r_prev
 
     def fibonacci(self, n: int) -> int:
-        """Return the ``n``-th Fibonacci number using Binet's formula."""
+        """Return the ``n``\ th Fibonacci number using Binet's formula."""
 
         if n < 0:
             raise ValueError("n must be non-negative")

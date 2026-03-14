@@ -13,6 +13,17 @@ from .unified_geometry import (  # noqa: F401
     UnifiedGeometryEngine,
 )
 
+__all__ = [
+    "AdaptiveLearningKernel",
+    "CoherenceEnergyField",
+    "ComplexManifoldField",
+    "FractalMobiusCoupler",
+    "QuantumEntanglementMeter",
+    "QuantumLogicMapper",
+    "QuantumTernaryField",
+    "RecurrenceOperator",
+    "ThermalSubstrate",
+    "UnifiedGeometryEngine",
 from .consciousness import (  # noqa: F401
     CategoryTensorNetwork,
     ComplexQuaternionMapper,
@@ -29,16 +40,6 @@ from .consciousness import (  # noqa: F401
 )
 
 __all__ = [
-    "AdaptiveLearningKernel",
-    "CoherenceEnergyField",
-    "ComplexManifoldField",
-    "FractalMobiusCoupler",
-    "QuantumEntanglementMeter",
-    "QuantumLogicMapper",
-    "QuantumTernaryField",
-    "RecurrenceOperator",
-    "ThermalSubstrate",
-    "UnifiedGeometryEngine",
     "CategoryTensorNetwork",
     "ComplexQuaternionMapper",
     "EntropyInformationBridge",
@@ -47,6 +48,7 @@ __all__ = [
     "MeasurementOperator",
     "Morphism",
     "NoetherAnalyzer",
+    "QuantumLogicMapper",
     "Quaternion",
     "ScaleInvarianceAnalyzer",
     "SpinNetwork",

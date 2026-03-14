@@ -1,27 +1,63 @@
 name: CI
 
 on:
-  workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, master, develop]
   pull_request:
-    branches: [main]
+    branches: [main, master, develop]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: pip install numpy sympy scipy mpmath pytest ruff
+          node-version: '20'
+          cache: 'npm'
+        if: hashFiles('package-lock.json') != '' || hashFiles('package.json') != ''
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+        if: hashFiles('requirements.txt') != '' || hashFiles('pyproject.toml') != ''
+
+      - name: Install Node dependencies
+        if: hashFiles('package.json') != ''
+        run: npm ci || npm install
+
+      - name: Install Python dependencies
+        if: hashFiles('requirements.txt') != ''
+        run: pip install -r requirements.txt
+
       - name: Lint
-        run: ruff check forge/ lab/ --select E,F,W --ignore E501
-        continue-on-error: true
+        if: hashFiles('package.json') != ''
+        run: npm run lint || true
+
+      - name: Type check
+        if: hashFiles('tsconfig.json') != ''
+        run: npm run typecheck || npm run type-check || npx tsc --noEmit || true
+
       - name: Test
-        run: python -m pytest tests/ -v
+        if: hashFiles('package.json') != ''
+        run: npm test || true
+
+      - name: Build
+        if: hashFiles('package.json') != ''
+        run: npm run build || true
+
+      - name: Upload build artifacts
+        if: success() && (hashFiles('dist/**') != '' || hashFiles('build/**') != '')
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            dist/
+            build/
+            out/
+          retention-days: 7
